@@ -1,0 +1,60 @@
+User should
+ - add first and last days of visits (according to passport stamps)
+ - be able to add more than 1 trip
+ - define the dates of future trip
+
+ Past trips:
+  - first day of valid data = first day of future trip - 180
+  - days before do not count
+  - all days days sum up and are substracted from allowed 90
+
+Future trip: 
+ - check if user can enter the EU on the defined day
+ - of not: refusal and proposal of a new date
+ - check if user can spend all the days in the EU
+ - if not  - refusal, propose allowed number of days
+
+Math:
+ - data needed:
+  - date of the trip - 1st day of planned trip (1d)
+  - number of days OR date of coming back (last day of the trip)
+  - dates (1st and last days of trips for thr last 180 days)
+
+
+
+ - operations:
+    A. check data validation:
+        - last day >= first day (if not  - error alert)
+        - date of future trip can be today, in future or in the past
+
+
+    B. count days of trip within 180 days
+
+        a. define margin_day = 1d - 180
+        b. if (margin_day < first_day && margin_day < last_day) 
+            {trip_count  = last_day - first_day + 1} 
+            else if (margin_day > first_day && margin_day < last_day){
+                trip_count = last_day - margin_day + 1
+            } else if (margin_day > first_day && margin_day > last_day){
+                trip_count = 0;
+            }
+    
+    C. Count total days used 
+        total_trip_days =+ trip_count
+
+    D. Count total days used + planned days 
+       total_trip_days =+ last_day_future - first_day_future + 1 - number_of_days
+
+    E. Compare fact_trip_days and future_trip_days to 90
+        - if (FATD < 90 && FUTD < 90) {
+            "Have a nice trip!"
+        }
+
+        - if (FATD > 90){
+            "You can enter the EU (FATD - 91) later, on (future first date + (FATD - 91)). Please make changes to your plans"
+        }
+
+        - if (FATD < 90 && FUTD > 90) {
+            "Please plan a shorter trip to avoid fines. You can spend in the EU () days and return on ____ or move your trip to later date () to spend the number of days you planned"
+        }
+
